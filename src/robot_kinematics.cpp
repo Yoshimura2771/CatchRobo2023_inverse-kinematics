@@ -35,9 +35,10 @@
      *
      */
 
-#include "ros2_inverse_kinematics/robot_kinematics.h"
+#include "../test/include/robot_kinematics.h"
 
 #include <cmath>
+#include <iostream>
 
 /*
  * void posrot_sum(float *posrot0, float *posrot1, float *posrot2){
@@ -52,8 +53,8 @@
 robot_kinematics::robot_kinematics(){
 
 
-    link_len[0] = 555;
-    link_len[1] = 450;
+    link_len[0] = 550;
+    link_len[1] = 460;
     link_len[2] =  43;
     link_len[3] =  20;
 
@@ -76,8 +77,8 @@ robot_kinematics::robot_kinematics(){
     joint_angle_lim[3][0]=0;    joint_angle_lim[3][1]=2*PI;
 
 
-    robot_kinematics::forward_kinematics(&posrot_now, &joint_angle_now);
-    robot_kinematics::forward_kinematics(&posrot_trg, &joint_angle_trg);
+    //robot_kinematics::forward_kinematics(&posrot_now, &joint_angle_now);
+    //robot_kinematics::forward_kinematics(&posrot_trg, &joint_angle_trg);
 
 
 }
@@ -110,17 +111,18 @@ void robot_kinematics::inverse_kinematics(float *f_posrot, float *joint_angle) {
     //Recalculate the point where the tip of the l1 is reaching
     float lxy = std::sqrt(std::pow(_posrot[X],2) + std::pow(_posrot[Y],2)) - link_len[2];
     float _z  = _posrot[Z] + link_len[3];
-    float r   = std::sqrt(std::pow(lxy,2) + std::pow(_z,2))
+    float r   = std::sqrt(std::pow(lxy,2) + std::pow(_z,2));
 
+    //std::cout<<"lxy:"<<lxy<<"\n_z"<<_z<<"\nr:"<<r;
 
+    float th1_ = std::acos((std::pow(link_len[0], 2) + std::pow(r, 2) - std::pow(link_len[1], 2)) / (2 * link_len[0] * r) );
 
-    joint_angle[0] = std::atan2(_posrot[X], _porot[Y]);
+    joint_angle[0] = std::atan2(_posrot[X], _posrot[Y]);
 
-    joint_angle[1] = PI - std::atan2(lxy, _z)
-            - std::acos(std::pow(link_len[0], 2) + std::pow(r, 2) - std::pow(link_len[1], 2) / (2 * link_len[0] * r) );
+    joint_angle[1] = PI - std::atan2(lxy, _z) - th1_;
 
     joint_angle[2] = PI / 2
-            + std::asin(link_len[0] / link_len[1] * std::sin( std::acos(std::pow(link_len[0], 2) + std::pow(r, 2) - std::pow(link_len[1], 2)) / (2 * link_len[0] * r) ) )
+            + std::asin(link_len[0] * std::sin(th1_) / link_len[1] )
             - std::atan2(lxy, _z);
 
     joint_angle[3] = _posrot[PHI] - joint_angle[0];
