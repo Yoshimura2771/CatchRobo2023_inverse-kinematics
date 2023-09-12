@@ -117,14 +117,13 @@ void robot_kinematics::inverse_kinematics(float *f_posrot, float *joint_angle) {
     float _z  = _posrot[Z] + link_len[3];
     float r   = sqrt(pow(lxy,2) + pow(_z,2));
 
-    //std::cout<<"lxy:"<<lxy<<"\n_z"<<_z<<"\nr:"<<r;
 
     float th1_  = acos((pow(link_len[0], 2) + pow(r, 2) - pow(link_len[1], 2)) / (2 * link_len[0] * r) );
-    float th1__ = atan2(lxy, _z);
+    float th1__ = atan2(_z, lxy);
     float th2_  = asin(link_len[0] * sin(th1_) / link_len[1] );
     float th2__ = PI / 2 - th1__;
 
-    cout<<"\nlxy:"<<lxy<<"\n_z:"<<_z<<"\nr:"<<r<<"\nth1_:"<<th1_<<"\nth1__:"<<th1__<<"\nth2_:"<<th2_<<"\nth2__:"<<th2__<<"\n"<<endl;
+    //cout<<"\nlxy:"<<lxy<<"\n_z:"<<_z<<"\nr:"<<r<<"\nth1_:"<<th1_<<"\nth1__:"<<th1__<<"\nth2_:"<<th2_<<"\nth2__:"<<th2__<<"\n"<<endl;
 
 
     joint_angle[0] = atan2(_posrot[X], _posrot[Y]);
