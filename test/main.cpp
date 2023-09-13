@@ -5,7 +5,7 @@
 
 
 int main() {
-    float trg_pos[6] = {585, 124,111,0,0,0};
+    float trg_pos[6] = {980, 225,111,0,0,0};
     float joint_angle[4];
 
     robot_kinematics robot;
