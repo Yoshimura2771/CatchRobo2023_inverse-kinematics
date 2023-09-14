@@ -135,9 +135,9 @@ void robot_kinematics::inverse_kinematics(float *f_posrot, float *joint_angle) {
 
 //if valid, return 1.
 bool robot_kinematics::is_valid_joint_angle(float *joint_angle){
-    if(0 < joint_angle[1] && joint_angle[1] < PI*13/30
-    && PI/2 < joint_angle[2] && joint_angle[2] < PI*29/30
-    && PI*7/20 < joint_angle[2] - joint_angle[1] && joint_angle[2] - joint_angle[1] < PI*5/6)
+    if(0 < joint_angle[1] && joint_angle[1] < PI*13/30  //link0 limitation
+    && PI/2 < joint_angle[2] && joint_angle[2] < PI*29/30   //link1 limitation
+    && PI*7/20 < joint_angle[2] - joint_angle[1] && joint_angle[2] - joint_angle[1] < PI*5/6)   //interference between link0 and link1
     {
         return 1;
     }
