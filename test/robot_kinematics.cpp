@@ -70,12 +70,6 @@ robot_kinematics::robot_kinematics(){
 
 */
 
-    //lower limit                   upper limit
-    joint_angle_lim[0][0]=0;    joint_angle_lim[0][1]=2*PI;
-    joint_angle_lim[1][0]=0;    joint_angle_lim[1][1]=2*PI;
-    joint_angle_lim[2][0]=0;    joint_angle_lim[2][1]=2*PI;
-    joint_angle_lim[3][0]=0;    joint_angle_lim[3][1]=2*PI;
-
 
     //robot_kinematics::forward_kinematics(&posrot_now, &joint_angle_now);
     //robot_kinematics::forward_kinematics(&posrot_trg, &joint_angle_trg);
@@ -91,11 +85,14 @@ void robot_kinematics::convert_field2robot(float *f_posrot, float *r_posrot) {
 }
 
 void robot_kinematics::forward_kinematics(float *posrot, float *joint_angle) {
-    float lxy = link_len[0]*std::sin(joint_angle[1]) + link_len[1]*std::sin(joint_angle[2]) + link_len[2];
+    using namespace std;
 
-    posrot[X] = lxy*(-1)*std::sin(joint_angle[0]);
-    posrot[Y] = lxy*std::cos(joint_angle[0]);
-    posrot[Z] = link_len[0]*std::cos(joint_angle[1]) + link_len[1]*std::cos(joint_angle[2]) - link_len[3];
+    float lxy = link_len[0]*sin(joint_angle[1]) + link_len[1]*sin(joint_angle[2]) + link_len[2];
+
+
+    posrot[X] = lxy*(-1)*sin(joint_angle[0]);
+    posrot[Y] = lxy*cos(joint_angle[0]);
+    posrot[Z] = link_len[0]*cos(joint_angle[1]) + link_len[1]*cos(joint_angle[2]) - link_len[3];
     posrot[PHI] = joint_angle[0] + joint_angle[1];
     posrot[THE] = 0;
     posrot[PSI] = 0;
@@ -133,4 +130,31 @@ void robot_kinematics::inverse_kinematics(float *f_posrot, float *joint_angle) {
     joint_angle[2] = th2_ + th2__;
 
     joint_angle[3] = _posrot[PHI] - joint_angle[0];
+}
+
+
+//if valid, return 1.
+bool robot_kinematics::is_valid_joint_angle(float *joint_angle){
+    if(0 < joint_angle[1] && joint_angle[1] < PI*13/30
+    && PI/2 < joint_angle[2] && joint_angle[2] < PI*29/30
+    && PI*7/20 < joint_angle[2] - joint_angle[1] && joint_angle[2] - joint_angle[1] < PI*5/6)
+    {
+        return 1;
+    }
+
+    else
+    {
+        return 0;
+    }
+}
+
+
+bool robot_kinematics::is_valid_f_posrot(float* f_posrot){
+    float joint_angle[4];
+
+
+    inverse_kinematics(f_posrot, joint_angle);
+
+    return is_valid_joint_angle(joint_angle);
+
 }

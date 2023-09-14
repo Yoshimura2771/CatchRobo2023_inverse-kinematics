@@ -5,7 +5,7 @@
 
 
 int main() {
-    float trg_pos[6] = {980, 225,111,0,0,0};
+    float trg_pos[6] = {400, 600,111,0,0,0};
     float joint_angle[4];
 
     robot_kinematics robot;
@@ -13,6 +13,6 @@ int main() {
 
     robot.inverse_kinematics(trg_pos, joint_angle);
 
-    std::cout <<"0:"<< joint_angle[0] <<"\n1:"<<joint_angle[1] <<"\n2:"<<joint_angle[2] << std::endl;
+    std::cout <<"0:"<< joint_angle[0] <<"\n1:"<<joint_angle[1] <<"\n2:"<<joint_angle[2] << "\nvalidity:"<< robot.is_valid_joint_angle(joint_angle)<< std::endl;
     return 0;
 }

@@ -71,6 +71,8 @@ private:
 
 public:
     robot_kinematics();
+    bool is_valid_joint_angle(float*);
+    bool is_valid_f_posrot(float*);
     void inverse_kinematics(float*, float*);
     void forward_kinematics(float*, float*);
 
